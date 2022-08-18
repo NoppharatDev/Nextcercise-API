@@ -28,7 +28,7 @@ export class JoinEventListsService {
           return res.status(200).send({
             statusCode: 200,
             success: false,
-            message: `Found join event id : ${eId})`,
+            message: `Found join event id : ${jeId})`,
             result: findJoinEventListId,
           });
         } else {
