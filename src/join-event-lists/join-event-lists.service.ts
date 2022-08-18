@@ -130,13 +130,13 @@ export class JoinEventListsService {
     }
   }
 
-  async findAllByEventId(eId: string, res) {
+  async findAllByEventId(jeId: number, res) {
     try {
-      const findJoinEventId = await this.joinEventRepository.findOneBy({ eId: eId });
+      const findJoinEventId = await this.joinEventRepository.findOneBy({ jeId: jeId });
       if (findJoinEventId) {
-        console.log(findJoinEventId.jeId);
+        // console.log(findJoinEventId.jeId);        
         const findJoinEventList = await this.joinEventListRepository.findBy({ jeId: findJoinEventId.jeId });
-        // console.log(findJoinEventId);
+        // console.log(findJoinEventList);
         return res.status(200).send({
           statusCode: 200,
           success: true,
@@ -147,7 +147,7 @@ export class JoinEventListsService {
         return res.status(200).send({
           statusCode: 200,
           success: false,
-          message: `Not found event id : ${eId}`,
+          message: `Not found event id : ${jeId}`,
           result: findJoinEventId,
         });
       }

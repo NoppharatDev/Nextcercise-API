@@ -18,9 +18,9 @@ export class JoinEventListsController {
     return this.joinEventListsService.update(+jelId, joinEventListDto, res);
   }
 
-  @Get('event/:eId')
-  findAllByEventId(@Param('eId') eId: string, @Res() res) {
-    return this.joinEventListsService.findAllByEventId(eId, res);
+  @Get('event/:jeId')
+  findAllByEventId(@Param('jeId') jeId: string, @Res() res) {
+    return this.joinEventListsService.findAllByEventId(+jeId, res);
   }
 
   @Get(':jelId')
