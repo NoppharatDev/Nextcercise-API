@@ -4,12 +4,14 @@ import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateCol
 export class JoinEventList {
     @PrimaryGeneratedColumn()
     jelId: number;
-    @Column({ primary: true })
+    @Column()
     jeId: number;
     @Column()
     cpOrder: number;
     @Column()
     cpId: number;
+    @Column({ default: false })
+    isSuccess: boolean;
     @CreateDateColumn()
     createdAt: Date
     @UpdateDateColumn()

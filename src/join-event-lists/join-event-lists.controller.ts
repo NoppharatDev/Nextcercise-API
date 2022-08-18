@@ -13,23 +13,18 @@ export class JoinEventListsController {
     return this.joinEventListsService.generate(eId, joinEventListDto, res);
   }
 
-  @Get()
-  findAll() {
-    return this.joinEventListsService.findAll();
+  @Patch(':jelId')
+  update(@Param('jelId') jelId: string, @Body() joinEventListDto: JoinEventListDto, @Res() res) {
+    return this.joinEventListsService.update(+jelId, joinEventListDto, res);
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.joinEventListsService.findOne(+id);
+  @Get('event/:eId')
+  findAllByEventId(@Param('eId') eId: string, @Res() res) {
+    return this.joinEventListsService.findAllByEventId(eId, res);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() joinEventListDto: JoinEventListDto) {
-    return this.joinEventListsService.update(+id, joinEventListDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.joinEventListsService.remove(+id);
+  @Get(':jelId')
+  findOneByJoinEventList(@Param('jelId') jelId: string, @Res() res) {
+    return this.joinEventListsService.findOneByJoinEventList(+jelId, res);
   }
 }
