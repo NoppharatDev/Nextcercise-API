@@ -23,54 +23,64 @@ export class JoinEventListsService {
       const { jeId } = joinEventListDto;
       const findJoinEventId = await this.joinEventRepository.findOneBy({ jeId: jeId })
       if (findJoinEventId) {
-        const findPath = await this.pathRepository.find({
-          where: {
-            eId: eId,
-          },
-          order: {
-            pId: 'ASC',
-            cpOrder: 'ASC',
-          },
-        });
-        const objGlobal = new Object();
-        const groups = findPath.reduce((groups, item) => {
-          const group = groups[item.pId] || [];
-          group.push({
-            cpOrder: item.cpOrder,
-            cpId: item.cpId,
-          });
-          groups[item.pId] = group;
-          return groups;
-        }, {});
-        objGlobal['eventId'] = eId;
-        objGlobal['pathObj'] = groups;
-        const groupsLength = Object.keys(groups).length;
-        if (groupsLength > 0) {
-          const randomKey = getRndInteger(1, groupsLength);
-          const randomResult = groups[randomKey];
-          console.log(randomKey);
-          console.log(randomResult);
-          for (const key in randomResult) {
-            const dataObj = {
-              jeId: jeId,
-              cpOrder: randomResult[key]["cpOrder"],
-              cpId: randomResult[key]["cpId"]
-            }
-            await this.joinEventListRepository.save(dataObj)
-          }
-          return res.status(201).send({
-            statusCode: 201,
-            success: true,
-            message: "Generate join event list successfully.",
-            result: randomResult,
-          });
-        } else {
+        const findJoinEventListId = await this.joinEventListRepository.findOneBy({ jeId: jeId })
+        if (findJoinEventListId) {
           return res.status(200).send({
             statusCode: 200,
             success: false,
-            message: `Generate join event list faild! (not found paths in event ${eId})`,
-            result: objGlobal,
+            message: `Found join event id : ${eId})`,
+            result: findJoinEventListId,
           });
+        } else {
+          const findPath = await this.pathRepository.find({
+            where: {
+              eId: eId,
+            },
+            order: {
+              pId: 'ASC',
+              cpOrder: 'ASC',
+            },
+          });
+          const objGlobal = new Object();
+          const groups = findPath.reduce((groups, item) => {
+            const group = groups[item.pId] || [];
+            group.push({
+              cpOrder: item.cpOrder,
+              cpId: item.cpId,
+            });
+            groups[item.pId] = group;
+            return groups;
+          }, {});
+          objGlobal['eventId'] = eId;
+          objGlobal['pathObj'] = groups;
+          const groupsLength = Object.keys(groups).length;
+          if (groupsLength > 0) {
+            const randomKey = getRndInteger(1, groupsLength);
+            const randomResult = groups[randomKey];
+            console.log(randomKey);
+            console.log(randomResult);
+            for (const key in randomResult) {
+              const dataObj = {
+                jeId: jeId,
+                cpOrder: randomResult[key]["cpOrder"],
+                cpId: randomResult[key]["cpId"]
+              }
+              await this.joinEventListRepository.save(dataObj)
+            }
+            return res.status(201).send({
+              statusCode: 201,
+              success: true,
+              message: "Generate join event list successfully.",
+              result: randomResult,
+            });
+          } else {
+            return res.status(200).send({
+              statusCode: 200,
+              success: false,
+              message: `Generate join event list faild! (not found paths in event ${eId})`,
+              result: objGlobal,
+            });
+          }
         }
       } else {
         return res.status(200).send({
@@ -150,11 +160,11 @@ export class JoinEventListsService {
       });
     }
   }
-  
+
   async findOneByJoinEventList(jelId: number, res) {
     try {
       const findOneJoinEventList = await this.joinEventListRepository.findOneBy({ jelId: jelId })
-      if(findOneJoinEventList) {
+      if (findOneJoinEventList) {
         return res.status(200).send({
           statusCode: 200,
           success: true,
