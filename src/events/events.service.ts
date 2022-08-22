@@ -31,7 +31,7 @@ export class EventsService {
       if(isTrash === 'true') { eventDto.isTrash = true } else if(isTrash === 'false') { eventDto.isTrash = false }
       if(isNoPath === 'true') { eventDto.isNoPath = true } else if(isNoPath === 'false') { eventDto.isNoPath = false }  
 
-      if (files.header) { eventDto.header = await this.uploadFile(files.header, eventDto.eId); }
+      if (files.background) { eventDto.background = await this.uploadFile(files.background, eventDto.eId); }
       if (files.banner) { eventDto.banner = await this.uploadFile(files.banner, eventDto.eId); }
       if (files.visual) { eventDto.visual = await this.uploadFile(files.visual, eventDto.eId); }
       // console.log(eventDto);
@@ -76,7 +76,7 @@ export class EventsService {
       if(isTrash === 'true') { eventDto.isTrash = true } else if(isTrash === 'false') { eventDto.isTrash = false }
       if(isNoPath === 'true') { eventDto.isNoPath = true } else if(isNoPath === 'false') { eventDto.isNoPath = false }  
 
-      if (files.header) { newEventDto.header = await this.uploadFile(files.header, eventDto.eId); }
+      if (files.background) { eventDto.background = await this.uploadFile(files.background, eventDto.eId); }
       if (files.banner) { newEventDto.banner = await this.uploadFile(files.banner, eventDto.eId); }
       if (files.visual) { newEventDto.visual = await this.uploadFile(files.visual, eventDto.eId); }
       const updateEvent = await this.eventRepository.update(id, newEventDto);

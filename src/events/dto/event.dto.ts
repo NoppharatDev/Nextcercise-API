@@ -18,7 +18,7 @@ export class EventDto {
     @ApiProperty({type: String})
     hostDetail: string;
     @ApiProperty({type: String})
-    header: string;
+    background: string;
     @ApiProperty({type: String})
     banner: string;
     @ApiProperty({type: String})

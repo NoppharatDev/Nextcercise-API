@@ -27,8 +27,8 @@ export class CheckpointDto {
     startFile: string
     @ApiProperty({type: String})
     resultFile: string
-    @ApiProperty({type: String})
-    backgroundFile: string
+    // @ApiProperty({type: String})
+    // backgroundFile: string
     @ApiProperty({type: Date})
     createdAt: Date
     @ApiProperty({type: Date})

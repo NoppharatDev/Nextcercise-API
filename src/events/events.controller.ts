@@ -11,12 +11,12 @@ export class EventsController {
 
   @Post()
   @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'banner' }, { name: 'header' }, { name: 'visual' }]),
+    FileFieldsInterceptor([{ name: 'banner' }, { name: 'background' }, { name: 'visual' }]),
   )
   create(
     @UploadedFiles()
     files: {
-      header?: Express.Multer.File[];
+      background?: Express.Multer.File[];
       banner?: Express.Multer.File[];
       visual?: Express.Multer.File[];
     },
@@ -28,11 +28,12 @@ export class EventsController {
 
   @Patch(':id')
   @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'banner' }, { name: 'header' }, { name: 'visual' }]),
+    FileFieldsInterceptor([{ name: 'banner' }, { name: 'background' }, { name: 'visual' }]),
   )
   update(
     @UploadedFiles()
     files: {
+      background?: Express.Multer.File[];
       banner?: Express.Multer.File[];
       visual?: Express.Multer.File[];
     },

@@ -19,7 +19,7 @@ export class Event {
     @Column()
     hostDetail: string;
     @Column()
-    header: string;
+    background: string;
     @Column()
     banner: string;
     @Column()
@@ -41,12 +41,12 @@ export class Event {
 @Entity("eventDraft")
 export class EventDraft extends Event {}
 
-@Entity("questInEvent")
-export class QuestInEvent {
-    @PrimaryGeneratedColumn()
-    qeId: number;
-    @Column()
-    eId: number;
-    @Column()
-    qId: number;
-}
+// @Entity("questInEvent")
+// export class QuestInEvent {
+//     @PrimaryGeneratedColumn()
+//     qeId: number;
+//     @Column()
+//     eId: number;
+//     @Column()
+//     qId: number;
+// }

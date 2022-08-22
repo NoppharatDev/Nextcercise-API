@@ -28,8 +28,8 @@ export class CheckPoint {
     startFile: string
     @Column()
     resultFile: string
-    @Column()
-    backgroundFile: string
+    // @Column()
+    // backgroundFile: string
     @CreateDateColumn()
     createdAt: Date
     @UpdateDateColumn()

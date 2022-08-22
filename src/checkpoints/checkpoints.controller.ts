@@ -11,12 +11,12 @@ export class CheckpointsController {
 
   @Post()
   @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'backgroundFile' }, { name: 'startFile' }, { name: 'resultFile' }]),
+    FileFieldsInterceptor([/*{ name: 'backgroundFile' },*/ { name: 'startFile' }, { name: 'resultFile' }]),
   )
   create(
     @UploadedFiles()
     files: {
-      backgroundFile?: Express.Multer.File[];
+      // backgroundFile?: Express.Multer.File[];
       startFile?: Express.Multer.File[];
       resultFile?: Express.Multer.File[];
     },

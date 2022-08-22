@@ -24,7 +24,7 @@ export class CheckpointsService {
         fs.mkdirSync(dir);
       }
 
-      if(files.backgroundFile) { checkPointDto.backgroundFile = await this.uploadFile(files.backgroundFile, dir); }
+      // if(files.backgroundFile) { checkPointDto.backgroundFile = await this.uploadFile(files.backgroundFile, dir); }
       if(files.startFile) { checkPointDto.startFile = await this.uploadFile(files.startFile, dir); }
       if(files.resultFile) { checkPointDto.resultFile = await this.uploadFile(files.resultFile, dir); }
       const saveCheckPoint = await this.checkPointRepository.save(checkPointDto)
@@ -56,7 +56,7 @@ export class CheckpointsService {
         fs.mkdirSync(dir);
       }
 
-      if(files.backgroundFile) { checkPointDto.backgroundFile = await this.uploadFile(files.backgroundFile, dir); }
+      // if(files.backgroundFile) { checkPointDto.backgroundFile = await this.uploadFile(files.backgroundFile, dir); }
       if(files.startFile) { checkPointDto.startFile = await this.uploadFile(files.startFile, dir); }
       if(files.resultFile) { checkPointDto.resultFile = await this.uploadFile(files.resultFile, dir); }
       const saveCheckPoint = await this.checkPointRepository.update({eId, cpId}, checkPointDto)
