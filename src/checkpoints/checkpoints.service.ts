@@ -17,6 +17,7 @@ export class CheckpointsService {
   /** Create New CheckPoin **/
   /**************************/
   async create(files, checkPointDto: CheckpointDto, res): Promise<CheckPoint> {
+    console.log(checkPointDto);
     try {
       const { eId, cpId } = checkPointDto;
       const dir = `src/uploads/${eId}/${cpId}`;

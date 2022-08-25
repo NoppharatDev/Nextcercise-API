@@ -18,8 +18,8 @@ export class CheckPoint {
     lat: Double
     @Column("double precision")
     long: Double
-    @Column()
-    length: number
+    @Column("double precision")
+    length: Double
     @Column({ type: 'double precision' })
     positionX: Double
     @Column({ type: 'double precision' })
