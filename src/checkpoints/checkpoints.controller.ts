@@ -11,14 +11,15 @@ export class CheckpointsController {
 
   @Post()
   @UseInterceptors(
-    FileFieldsInterceptor([/*{ name: 'backgroundFile' },*/ { name: 'startFile' }, { name: 'resultFile' }]),
+    FileFieldsInterceptor([{ name: 'startFile' }, { name: 'resultFile' }, { name: 'beforeFile' }, { name: 'afterFile' }]),
   )
   create(
     @UploadedFiles()
     files: {
-      // backgroundFile?: Express.Multer.File[];
       startFile?: Express.Multer.File[];
       resultFile?: Express.Multer.File[];
+      beforeFile?: Express.Multer.File[];
+      afterFile?: Express.Multer.File[];
     },
     @Body() checkPointDto: CheckpointDto,
     @Res() res,
@@ -28,7 +29,7 @@ export class CheckpointsController {
 
   @Patch(':eId/:cpId')
   @UseInterceptors(
-    FileFieldsInterceptor([{ name: 'startFile' }, { name: 'resultFile' }]),
+    FileFieldsInterceptor([{ name: 'startFile' }, { name: 'resultFile' }, { name: 'beforeFile' }, { name: 'afterFile' }]),
   )
   update(
     @Param('eId') eId: string,
@@ -37,6 +38,8 @@ export class CheckpointsController {
     files: {
       startFile?: Express.Multer.File[];
       resultFile?: Express.Multer.File[];
+      beforeFile?: Express.Multer.File[];
+      afterFile?: Express.Multer.File[];
     },
     @Body() checkPointDto: CheckpointDto,
     @Res() res,

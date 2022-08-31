@@ -28,6 +28,10 @@ export class CheckPoint {
     startFile: string
     @Column()
     resultFile: string
+    @Column({ default: "" })
+    beforeFile: string
+    @Column({ default: "" })
+    afterFile: string
     // @Column()
     // backgroundFile: string
     @CreateDateColumn()

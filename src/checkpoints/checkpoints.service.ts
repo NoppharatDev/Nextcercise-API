@@ -28,6 +28,8 @@ export class CheckpointsService {
       // if(files.backgroundFile) { checkPointDto.backgroundFile = await this.uploadFile(files.backgroundFile, dir); }
       if(files.startFile) { checkPointDto.startFile = await this.uploadFile(files.startFile, dir); }
       if(files.resultFile) { checkPointDto.resultFile = await this.uploadFile(files.resultFile, dir); }
+      if(files.beforeFile) { checkPointDto.beforeFile = await this.uploadFile(files.beforeFile, dir); }
+      if(files.afterFile) { checkPointDto.afterFile = await this.uploadFile(files.afterFile, dir); }
       const saveCheckPoint = await this.checkPointRepository.save(checkPointDto)
 
       return res.status(201).send({
@@ -60,6 +62,8 @@ export class CheckpointsService {
       // if(files.backgroundFile) { checkPointDto.backgroundFile = await this.uploadFile(files.backgroundFile, dir); }
       if(files.startFile) { checkPointDto.startFile = await this.uploadFile(files.startFile, dir); }
       if(files.resultFile) { checkPointDto.resultFile = await this.uploadFile(files.resultFile, dir); }
+      if(files.beforeFile) { checkPointDto.beforeFile = await this.uploadFile(files.beforeFile, dir); }
+      if(files.afterFile) { checkPointDto.afterFile = await this.uploadFile(files.afterFile, dir); }
       const saveCheckPoint = await this.checkPointRepository.update({eId, cpId}, checkPointDto)
 
       return res.status(200).send({

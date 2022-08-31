@@ -26,10 +26,10 @@ export class EventsService {
         fs.mkdirSync(dir);
       }
 
-      if(isPublish === 'true') { eventDto.isPublish = true } else if(isPublish === 'false') { eventDto.isPublish = false }
-      if(isDraft === 'true') { eventDto.isDraft = true } else if(isDraft === 'false') { eventDto.isDraft = false }
-      if(isTrash === 'true') { eventDto.isTrash = true } else if(isTrash === 'false') { eventDto.isTrash = false }
-      if(isNoPath === 'true') { eventDto.isNoPath = true } else if(isNoPath === 'false') { eventDto.isNoPath = false }  
+      if (isPublish === 'true') { eventDto.isPublish = true } else if (isPublish === 'false') { eventDto.isPublish = false }
+      if (isDraft === 'true') { eventDto.isDraft = true } else if (isDraft === 'false') { eventDto.isDraft = false }
+      if (isTrash === 'true') { eventDto.isTrash = true } else if (isTrash === 'false') { eventDto.isTrash = false }
+      if (isNoPath === 'true') { eventDto.isNoPath = true } else if (isNoPath === 'false') { eventDto.isNoPath = false }
 
       if (files.background) { eventDto.background = await this.uploadFile(files.background, eventDto.eId); }
       if (files.banner) { eventDto.banner = await this.uploadFile(files.banner, eventDto.eId); }
@@ -65,31 +65,44 @@ export class EventsService {
     try {
       const { isPublish, isDraft, isTrash, isNoPath } = eventDto;
       const { eId, ...newEventDto } = eventDto;
+
       eventDto.eId = uuidv4();
       const dir = `src/uploads/${eventDto.eId}`;
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
 
-      if(isPublish === 'true') { eventDto.isPublish = true } else if(isPublish === 'false') { eventDto.isPublish = false }
-      if(isDraft === 'true') { eventDto.isDraft = true } else if(isDraft === 'false') { eventDto.isDraft = false }
-      if(isTrash === 'true') { eventDto.isTrash = true } else if(isTrash === 'false') { eventDto.isTrash = false }
-      if(isNoPath === 'true') { eventDto.isNoPath = true } else if(isNoPath === 'false') { eventDto.isNoPath = false }  
+      if (isPublish === 'true') { eventDto.isPublish = true } else if (isPublish === 'false') { eventDto.isPublish = false }
+      if (isDraft === 'true') { eventDto.isDraft = true } else if (isDraft === 'false') { eventDto.isDraft = false }
+      if (isTrash === 'true') { eventDto.isTrash = true } else if (isTrash === 'false') { eventDto.isTrash = false }
+      if (isNoPath === 'true') { eventDto.isNoPath = true } else if (isNoPath === 'false') { eventDto.isNoPath = false }
 
-      if (files.background) { eventDto.background = await this.uploadFile(files.background, eventDto.eId); }
-      if (files.banner) { newEventDto.banner = await this.uploadFile(files.banner, eventDto.eId); }
-      if (files.visual) { newEventDto.visual = await this.uploadFile(files.visual, eventDto.eId); }
-      const updateEvent = await this.eventRepository.update(id, newEventDto);
-      const updateEventDraft = await this.eventDraftRepository.update(id, newEventDto);
+      if (files) {
+        if (files.background) { eventDto.background = await this.uploadFile(files.background, eventDto.eId); }
+        if (files.banner) { newEventDto.banner = await this.uploadFile(files.banner, eventDto.eId); }
+        if (files.visual) { newEventDto.visual = await this.uploadFile(files.visual, eventDto.eId); }
+      }
+
+      // console.log("isPublish :", isPublish);
+      // console.log("isDraft :", isDraft);
+      // console.log("isTrash :", isTrash);
+      // console.log("#################################");      
+      
+      if (isPublish === true || isPublish === false) {
+        await this.eventRepository.update(id, { isDraft: false, isTrash: false, isPublish: isPublish });
+        await this.eventDraftRepository.update(id, { isDraft: false, isTrash: false, isPublish: isPublish });
+      } else if (isDraft) {
+        await this.eventDraftRepository.update(id, {isPublish: false, isDraft: isDraft});
+      } 
 
       return res.status(200).send({
         statusCode: 200,
         success: true,
         message: "Update event successfully.",
-        result: {
-          updateEvent,
-          updateEventDraft
-        },
+        // result: {
+        //   updateEvent,
+        //   updateEventDraft
+        // },
       });
     } catch (error) {
       return res.status(400).send({
@@ -109,7 +122,7 @@ export class EventsService {
         statusCode: 200,
         success: true,
         message: "Remove event to trash successfully.",
-        result: {removeEventToTrash, removeEventDraftToTrash},
+        result: { removeEventToTrash, removeEventDraftToTrash },
       });
     } catch (error) {
       return res.status(400).send({
@@ -129,7 +142,7 @@ export class EventsService {
         statusCode: 200,
         success: true,
         message: "Restore event successfully.",
-        result: {removeEventToTrash, removeEventDraftToTrash},
+        result: { removeEventToTrash, removeEventDraftToTrash },
       });
     } catch (error) {
       return res.status(400).send({
@@ -203,14 +216,14 @@ export class EventsService {
   }
 
   async deleteEvent(eId: string, res) {
-    try {  
+    try {
       const deleteEvent = await this.eventRepository.delete(eId);
       const deleteEventDraft = await this.eventDraftRepository.delete(eId);
       return res.status(200).send({
         statusCode: 200,
         success: true,
         message: `Delete event successfully`,
-        result: {deleteEvent, deleteEventDraft}
+        result: { deleteEvent, deleteEventDraft }
       });
     } catch (error) {
       return res.status(400).send({
