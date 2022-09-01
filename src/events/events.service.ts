@@ -63,7 +63,7 @@ export class EventsService {
   async update(files, id: string, eventDto, res) {
     // console.log(eventDto);
     try {
-      const { isPublish, isDraft, isTrash, isNoPath } = eventDto;
+      let { isPublish, isDraft, isTrash, isNoPath } = eventDto;
       const { eId, ...newEventDto } = eventDto;
 
       eventDto.eId = uuidv4();
@@ -86,14 +86,21 @@ export class EventsService {
       // console.log("isPublish :", isPublish);
       // console.log("isDraft :", isDraft);
       // console.log("isTrash :", isTrash);
-      // console.log("#################################");      
+      // console.log("#################################");
+
+      const statusTrue = "true" || true
+      const statusFalse = "false" || false
       
+      if(isPublish === statusTrue) { isPublish = true; }
+      else if(isPublish === statusFalse) { isPublish = false; }
+
       if (isPublish === true || isPublish === false) {
         await this.eventRepository.update(id, { isDraft: false, isTrash: false, isPublish: isPublish });
         await this.eventDraftRepository.update(id, { isDraft: false, isTrash: false, isPublish: isPublish });
-      } else if (isDraft) {
-        await this.eventDraftRepository.update(id, {isPublish: false, isDraft: isDraft});
-      } 
+      } else if (isDraft === statusTrue) {
+        console.log("Draft");
+        await this.eventDraftRepository.update(id, { isPublish: false, isDraft: true });
+      }
 
       return res.status(200).send({
         statusCode: 200,
