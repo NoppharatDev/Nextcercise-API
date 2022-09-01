@@ -86,6 +86,8 @@ export class StreamFileFindallService {
         resultvisual: ArrImgvisual ,
         resultStartAr: ArStart , 
         resultEnd : ArEnd ,
+        resultbeforeFile: beforeFile , 
+        resultafterFile:afterFile
       })
     } catch (error) {
       return res.status(400).send({
