@@ -89,7 +89,7 @@ export class CheckpointsService {
     try {
       const findCheckPoint = await this.checkPointRepository.find({
         order: {
-          createdAt: "DESC"
+          createdAt: "ASC"
         }
       })
 
