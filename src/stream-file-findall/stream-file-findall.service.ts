@@ -26,17 +26,22 @@ export class StreamFileFindallService {
       const ArrImgvisual = []
       const ArStart = []
       const ArEnd = []
+      const beforeFile = []
+      const afterFile = []
       for (const key in findImgEvent) {
         if (Object.prototype.hasOwnProperty.call(findImgEvent, key)) {
           const element = findImgEvent[key];
           const ObjImgbackground = {
-            NamefindImgฺbackground: `${element.eId}/${element.background}`
+            NamefindImgฺbackground: `${element.eId}/${element.background}` ,
+            NameImg :`${element.background}`
           }
           const ObjImgbander = {
-            NamefindImgฺbackground: `${element.eId}/${element.banner}`
+            NamefindImgฺbander: `${element.eId}/${element.banner}` , 
+            NameImg:`${element.banner}`
           }
           const ObjImgvisual = {
-            NamefindImgฺbackground: `${element.eId}/${element.visual}`
+            NamefindImgฺvisual: `${element.eId}/${element.visual}` ,
+            NameImg:`${element.visual}`
           }
           if (ObjImgbackground && ObjImgbander && ObjImgvisual) {
             ArrImgbackground.push(ObjImgbackground)
@@ -49,14 +54,26 @@ export class StreamFileFindallService {
         if (Object.prototype.hasOwnProperty.call(findImgARscan, key)) {
           const element = findImgARscan[key];
           const ObjStartARscan = {
-            NamefindImgArscan: `${element.eId}/${element.cpId}/${element.startFile}`
+            NamefindImgArscan: `${element.eId}/${element.cpId}/${element.startFile}` , 
+            Namefile : `${element.startFile}` , 
           }
           const ObjEndARscan = {
-            NamefindImgArscan: `${element.eId}/${element.cpId}/${element.resultFile}`
+            NamefindImgArscan: `${element.eId}/${element.cpId}/${element.resultFile}` , 
+            Namefile : `${element.resultFile}`
+          }
+          const ObjbeforeFile = {
+            NamefindImgArscan: `${element.eId}/${element.cpId}/${element.beforeFile}` , 
+            Namefile : `${element.beforeFile}`
+          }
+          const ObjafterFile = {
+            NamefindImgArscan: `${element.eId}/${element.cpId}/${element.afterFile}` , 
+            Namefile : `${element.afterFile}`
           }
           if (ObjStartARscan && ObjEndARscan) {
             ArStart.push(ObjStartARscan)
             ArEnd.push(ObjEndARscan)
+            beforeFile.push(ObjbeforeFile)
+            afterFile.push(ObjafterFile)
           }
         }
       }
@@ -68,7 +85,7 @@ export class StreamFileFindallService {
         resultBander: ArrImgbander,
         resultvisual: ArrImgvisual ,
         resultStartAr: ArStart , 
-        resultEnd : ArEnd
+        resultEnd : ArEnd ,
       })
     } catch (error) {
       return res.status(400).send({
