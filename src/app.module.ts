@@ -12,6 +12,7 @@ import { StreamFilesModule } from './stream-files/stream-files.module';
 import { AuthsModule } from './auths/auths.module';
 import { JoinEventsModule } from './join-events/join-events.module';
 import { JoinEventListsModule } from './join-event-lists/join-event-lists.module';
+import { StreamFileFindallModule } from './stream-file-findall/stream-file-findall.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { JoinEventListsModule } from './join-event-lists/join-event-lists.module
     AuthsModule,
     JoinEventsModule,
     JoinEventListsModule,
+    StreamFileFindallModule,
   ],
   controllers: [AppController],
   providers: [AppService],
