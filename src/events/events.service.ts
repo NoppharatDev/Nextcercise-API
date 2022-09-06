@@ -61,13 +61,13 @@ export class EventsService {
   /** Update Event Detail **/
   /*************************/
   async update(files, id: string, eventDto, res) {
-    // console.log(eventDto);
+    console.log("eventDto :", eventDto);
     try {
       let { isPublish, isDraft, isTrash, isNoPath } = eventDto;
       const { eId, ...newEventDto } = eventDto;
 
       eventDto.eId = uuidv4();
-      const dir = `src/uploads/${eventDto.eId}`;
+      const dir = `src/uploads/${id}`;
       if (!fs.existsSync(dir)) {
         fs.mkdirSync(dir);
       }
@@ -78,7 +78,7 @@ export class EventsService {
       if (isNoPath === 'true') { eventDto.isNoPath = true } else if (isNoPath === 'false') { eventDto.isNoPath = false }
 
       if (files) {
-        if (files.background) { eventDto.background = await this.uploadFile(files.background, eventDto.eId); }
+        if (files.background) { newEventDto.background = await this.uploadFile(files.background, eventDto.eId); }
         if (files.banner) { newEventDto.banner = await this.uploadFile(files.banner, eventDto.eId); }
         if (files.visual) { newEventDto.visual = await this.uploadFile(files.visual, eventDto.eId); }
       }
@@ -90,16 +90,18 @@ export class EventsService {
 
       const statusTrue = "true" || true
       const statusFalse = "false" || false
-      
-      if(isPublish === statusTrue) { isPublish = true; }
-      else if(isPublish === statusFalse) { isPublish = false; }
+
+      if (isPublish === statusTrue) { isPublish = true; }
+      else if (isPublish === statusFalse) { isPublish = false; }
 
       if (isPublish === true || isPublish === false) {
-        await this.eventRepository.update(id, { isDraft: false, isTrash: false, isPublish: isPublish });
-        await this.eventDraftRepository.update(id, { isDraft: false, isTrash: false, isPublish: isPublish });
+        await this.eventRepository.update(id, {...newEventDto, ...{ isDraft: false, isTrash: false, isPublish: isPublish }});
+        await this.eventDraftRepository.update(id, { ...newEventDto, ...{ isDraft: false, isTrash: false, isPublish: isPublish } });
       } else if (isDraft === statusTrue) {
         console.log("Draft");
-        await this.eventDraftRepository.update(id, { isPublish: false, isDraft: true });
+        await this.eventDraftRepository.update(id, { ...newEventDto, ...{ isPublish: false, isDraft: true } });
+      } else {
+        await this.eventDraftRepository.update(id, newEventDto);
       }
 
       return res.status(200).send({

@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { CheckPoint } from 'src/checkpoints/entities/checkpoint.entity';
+import { Event } from 'src/events/entities/event.entity';
 import { Repository } from 'typeorm';
 import { QuestDto } from './dto/quest.dto';
 import { Quest } from './entities/quest.entity';
@@ -7,7 +9,8 @@ import { Quest } from './entities/quest.entity';
 @Injectable()
 export class QuestsService {
   constructor(
-    @InjectRepository(Quest) private questRepository: Repository<Quest>
+    @InjectRepository(Quest) private questRepository: Repository<Quest>,
+    @InjectRepository(CheckPoint) private checkpointRepository: Repository<CheckPoint>
   ) { }
 
   async create(res, questDto: QuestDto) {
@@ -111,13 +114,22 @@ export class QuestsService {
 
   async removeToTrashQuest(qId: number, res) {
     try {
-      const removeToTrashQuest = await this.questRepository.update(qId, { isTrash: true });
-      return res.status(200).send({
-        statusCode: 200,
-        success: true,
-        message: `Remove quest to trash successfully`,
-        result: removeToTrashQuest
-      });
+      const findQuestInEvent = await this.checkpointRepository.find({ where: { qId: qId } })
+      if (findQuestInEvent.length > 0) {
+        return res.status(200).send({
+          statusCode: 200,
+          success: false,
+          message: `Found quest in event`
+        });
+      } else {
+        const removeToTrashQuest = await this.questRepository.update(qId, { isTrash: true });
+        return res.status(200).send({
+          statusCode: 200,
+          success: true,
+          message: `Remove quest to trash successfully`,
+          result: removeToTrashQuest
+        });
+      }
     } catch (error) {
       return res.status(400).send({
         statusCode: 400,
