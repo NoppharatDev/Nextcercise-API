@@ -69,6 +69,11 @@ export class EventsController {
     return this.eventsService.findTrash(res);
   }
 
+  @Get('show/publish')
+  findPublish(@Res() res) {
+    return this.eventsService.findPublish(res);
+  }
+
   @Delete('delete/:id')
   deleteEvent(@Param('id') id: string, @Res() res) {
     return this.eventsService.deleteEvent(id, res);
