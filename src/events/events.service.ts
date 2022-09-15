@@ -5,6 +5,7 @@ import { EventDto } from './dto/event.dto';
 import { v4 as uuidv4 } from 'uuid';
 import { createWriteStream } from 'fs';
 import { Event, EventDraft } from './entities/event.entity';
+import { CheckPoint } from 'src/checkpoints/entities/checkpoint.entity';
 var fs = require('fs');
 
 @Injectable()
@@ -12,6 +13,7 @@ export class EventsService {
   constructor(
     @InjectRepository(Event) private eventRepository: Repository<Event>,
     @InjectRepository(EventDraft) private eventDraftRepository: Repository<EventDraft>,
+    @InjectRepository(CheckPoint) private checkPointRepository: Repository<CheckPoint>,
   ) { }
 
   /**********************/
@@ -31,9 +33,33 @@ export class EventsService {
       if (isTrash === 'true') { eventDto.isTrash = true } else if (isTrash === 'false') { eventDto.isTrash = false }
       if (isNoPath === 'true') { eventDto.isNoPath = true } else if (isNoPath === 'false') { eventDto.isNoPath = false }
 
-      if (files.background) { eventDto.background = await this.uploadFile(files.background, eventDto.eId); }
-      if (files.banner) { eventDto.banner = await this.uploadFile(files.banner, eventDto.eId); }
-      if (files.visual) { eventDto.visual = await this.uploadFile(files.visual, eventDto.eId); }
+      if (files.background) {
+        eventDto.background = await this.uploadFile(files.background, eventDto.eId);
+      } else {
+        return res.status(200).send({
+          statusCode: 200,
+          success: false,
+          message: "ไม่สามารถสร้าง Event ได้เนื่องจากไม่พบการอัพโหลด Background",
+        });
+      }
+      if (files.banner) {
+        eventDto.banner = await this.uploadFile(files.banner, eventDto.eId);
+      } else {
+        return res.status(200).send({
+          statusCode: 200,
+          success: false,
+          message: "ไม่สามารถสร้าง Event ได้เนื่องจากไม่พบการอัพโหลด Banner",
+        });
+      }
+      if (files.visual) {
+        eventDto.visual = await this.uploadFile(files.visual, eventDto.eId);
+      } else {
+        return res.status(200).send({
+          statusCode: 200,
+          success: false,
+          message: "ไม่สามารถสร้าง Event ได้เนื่องจากไม่พบการอัพโหลด Visual",
+        });
+      }
       // console.log(eventDto);
       // const saveEvent = await this.eventRepository.save(eventDto);
       // const saveEventDraft = await this.eventDraftRepository.save(eventDto);
@@ -109,13 +135,22 @@ export class EventsService {
       else if (isPublish === statusFalse) { isPublish = false; }
       let saveEvent, saveEventDraft;
       if (isPublish === true || isPublish === false) {
-        saveEventDraft = await this.eventDraftRepository.update(id, { ...newEventDto, ...{ isDraft: false, isTrash: false, isPublish: isPublish } });
-        const findEventDraft = await this.eventDraftRepository.findOneBy({ eId: id })
-        const findEvent = await this.eventRepository.findOneBy({ eId: id })
-        if (findEvent === null) {
-          saveEvent = await this.eventRepository.save({...findEventDraft});
+        const findCheckpointByEventId = await this.checkPointRepository.findOneBy({ eId: id })
+        if (findCheckpointByEventId) {
+          saveEventDraft = await this.eventDraftRepository.update(id, { ...newEventDto, ...{ isDraft: false, isTrash: false, isPublish: isPublish } });
+          const findEventDraft = await this.eventDraftRepository.findOneBy({ eId: id })
+          const findEvent = await this.eventRepository.findOneBy({ eId: id })
+          if (findEvent === null) {
+            saveEvent = await this.eventRepository.save({ ...findEventDraft });
+          } else {
+            saveEvent = await this.eventRepository.update(id, { ...newEventDto, ...{ isDraft: false, isTrash: false, isPublish: isPublish } });
+          }
         } else {
-          saveEvent = await this.eventRepository.update(id, { ...newEventDto, ...{ isDraft: false, isTrash: false, isPublish: isPublish } });
+          return res.status(200).send({
+            statusCode: 200,
+            success: false,
+            message: "ไม่สามารถ Publish ได้ เนื่องจากไม่พบ Checkpoint ใน Event นี้",
+          });
         }
       } else if (isDraft === statusTrue) {
         saveEventDraft = await this.eventDraftRepository.update(id, { ...newEventDto, ...{ isPublish: false, isDraft: true } });
@@ -203,7 +238,7 @@ export class EventsService {
 
   async findOne(id: string, res): Promise<Event> {
     try {
-      const findOneEvent = await this.eventRepository.findOne({
+      const findOneEvent = await this.eventDraftRepository.findOne({
         where: {
           eId: id,
           isTrash: false
